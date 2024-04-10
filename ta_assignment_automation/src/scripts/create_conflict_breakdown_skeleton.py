@@ -8,7 +8,6 @@ __license__ = "MIT style license file"
 import json
 from copy import deepcopy
 
-
 def createConflictBreakdownSkeleton()-> dict:
     """
     This function creates the skeleton for conflict break down matrix.
@@ -46,7 +45,7 @@ def createConflictBreakdownSkeleton()-> dict:
     Arguments
     ----------
     None
-    
+
     Returned Values
     ----------
     conflit_breakdown_matix: dict
