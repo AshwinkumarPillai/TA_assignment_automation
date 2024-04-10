@@ -8,7 +8,7 @@ __license__ = "MIT style license file"
 from ..utils.csvToDict import read_csv_to_dict
 from ..utils.dictionaryToJsonFile import write_dict_to_json
 
-def parseInstructorPref(input_file_path:str ="input_files/Instr_Pref_old.csv", output_file_path:str ="output_files/ins_pref.json") -> None:
+def parseInstructorPref(input_file_path:str ="input_files/Instr_Pref.csv", output_file_path:str ="output_files/ins_pref.json") -> None:
 
     """
     This function parses the Instructor preference and store that in a json file
