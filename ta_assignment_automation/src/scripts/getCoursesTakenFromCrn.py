@@ -7,8 +7,6 @@ __license__ = "MIT style license file"
 
 import json
 
-# TODO - RELATIVE IMPORTS IN PYTHON
-
 def getCoursesTakenFromCRN(crn_array: list=[]) -> list:
 
     """

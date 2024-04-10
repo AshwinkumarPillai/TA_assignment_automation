@@ -9,7 +9,6 @@ import csv
 
 def read_csv_to_dict(file_path: str) -> list:
 
-
     """
     This utility function reads a CSV file (the path is given as the input parameter) and returns a list of dictionaries.
 

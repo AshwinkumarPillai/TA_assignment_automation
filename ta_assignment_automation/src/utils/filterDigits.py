@@ -1,18 +1,24 @@
 def filter_digits(input_array: list) -> list:
     
-    # TODO - CHANGE DOCUMENTATION
-    
     """
-    This function 
+    The function iterates over each string in the input_array, filters out the digits, converts them into integers,
+    and appends them to a new list called filtered_array.
+
+
+    Example:
+    input_array = ["abc123", "def456", "ghi789"]
+    result = filter_digits(input_array)
+    print(result)  # Output: [123, 456, 789]
 
     Arguments
     ----------
     input_array: list
-        the 
+        the input list of strings which will have alphanumeric characters 
         
     Returned Values
     ----------
-    None
+    filtered_array: list
+        the filtered list of intergers with only numeric data
 
     """
     filtered_array = []

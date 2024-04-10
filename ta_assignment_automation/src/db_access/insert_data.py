@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from connect import engine
 from models import Base, TA, Course, Instructor, Section, Schedule, Assignment
 
-import sys, os, json
+import json
 
 
 
@@ -50,7 +50,6 @@ for schedule in schedules:
     schedule_list.append(obj)
 
 for index, assignment in enumerate(assignments):
-    # TODO - TA hours needs to be computed for every assignments
     # obj = Assignment(assignment_id = index + 1, ta_id = assignment["ta_id"], section_id = assignment["crn"], ta_hours = assignment["ta_hours"])
     obj = Assignment(assignment_id = index + 1, uga_id = assignment["uga_id"], crn = assignment["crn"], ta_hours = "17.78")
     assignment_list.append(obj)

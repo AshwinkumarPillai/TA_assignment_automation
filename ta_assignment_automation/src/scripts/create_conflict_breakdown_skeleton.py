@@ -8,16 +8,45 @@ __license__ = "MIT style license file"
 import json
 from copy import deepcopy
 
-# TODO = MENTION STRUCTURE OF THE JSON FILE: conflict breakdown skeleton somewhere in the docs
 
 def createConflictBreakdownSkeleton()-> dict:
     """
     This function creates the skeleton for conflict break down matrix.
     This matrix maps TA to Sections with the conflicts and contains information the cost based on different criteria
 
+    EXAMPLE STRUCTURE:
+
+    This json data will have TA id mapped to all the sections and each section they will have the criteria detail 
+    and the cost associated with it
+
+    {
+        "total_ta": 64,               // total number of TAs
+        "total_sections": 64,         // total number of sections
+        "1": {                        // TA ID 
+            "ta_id": 1,
+            "fname": "Yulong ",
+            "lname": "Wang",
+            "email": "yw98883@uga.edu",         // REQUIRED DETAILS OF TA
+            "1": {                              // SECTION DATA
+                "section_id": 1,
+                "course_no": "CSCI3030",
+                "course_long_name": "Computing Ethics and Society",
+                "total_cost": 4,
+                "time_conflict_with_lab": 0,
+                "ta_hours_less_class_has_more_capacity": 0,             // CRITERIA FOR CONFLICT
+                "ta_currently_taking_this_class": 0,
+                "not_instructor_preference": 4,
+                "not_instructor_first_preference": 0,
+                "did_not_TA_this_class_before": 0,
+                "did_not_take_this_class_before": 0,
+                "not_avaliable_at_class_time": 0
+            },
+    }
+
     Arguments
     ----------
-        
+    None
+    
     Returned Values
     ----------
     conflit_breakdown_matix: dict

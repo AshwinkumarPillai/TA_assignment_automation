@@ -115,7 +115,23 @@ def mergedCrnsBasedOnRequirement(lab_data: dict) -> list:
 
 
 def merge1302Sections(lab_data: dict) -> dict:
-    # TODO = DOCUMENTATION
+    """
+    This function is specifically created to merge the 1302 sections. Since there are 5 TAs for 6 sections, we merge the section with 
+    lowest two enrolments into one (sorting and merging)
+
+    Arguments
+    ----------
+    lab_data: dict
+        Dictionary that maps Course number with array with all sections in it e.g. 
+        {
+           "CSCI1301L": [{SECTION 1}, {SECTION 2}],
+        }
+        
+    Returned Values
+    ----------
+    lab_data: dict
+        original input dictionary with merged sections for 1302
+    """
 
     section1302 = lab_data["CSCI1302"]
 

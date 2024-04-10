@@ -12,7 +12,18 @@ def parseInstructorPref(input_file_path:str ="input_files/Instr_Pref.csv", outpu
 
     """
     This function parses the Instructor preference and store that in a json file
-    # TODO - Why CSCI4 and CSCI 6
+    
+    If you look at the code, for some of the classes starting with CSCI4, 
+    we are assigning instructor preference to their 6000-level class as well.
+
+    For example, Instructor for CSCI 4050 will have their preference for that class,
+    but the instructor teaches both 4050 and 6050 but in the preference file it will be mentioned as 4050.
+    So we assign the preference to equivalend 6000 level class as well which in this case is 6050
+
+    Now if an instructor has preference for the 6000 level class (grad-only), then we will only create prefence for that class.
+    Because the key we generate will only assign the preference if the instructor takes both the class, otherwise it will
+    assign preference to 4000 level and 6000 level separately.
+
 
     Arguments
     ----------
