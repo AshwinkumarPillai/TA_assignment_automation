@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conflicts View</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      tr {
+        padding: 0;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        transition: 0.2s;
+        z-index: -10;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+      td:hover {
+        cursor: pointer;
+        background-color: #34495e;
+        color: white;
+      }
+
+      /* ------------------------ */
+      .main_table_td:first-child,
+      .main_table_th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 100;
+        background-color: #ddd;
+      }
+      .main_table_td:nth-child(2),
+      .main_table_th:nth-child(2) {
+        position: sticky;
+        left: 40px;
+        z-index: 100 !important;
+        background-color: #ddd;
+      }
+      .tableFixHead th {
+        position: sticky;
+        top: 0;
+        background: #eee;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <button><a href="./index.html">View Assignments</a></button>
+
+    <script>
+      function createInnerTable(conflict_data) {
+        let table = document.createElement("table");
+
+        cost_criterias = [
+          "time_conflict_with_lab",
+          "ta_hours_less_class_has_more_capacity",
+          "ta_currently_taking_this_class",
+          "not_instructor_preference",
+          "not_instructor_first_preference",
+          "did_not_TA_this_class_before",
+          "did_not_take_this_class_before",
+          "not_avaliable_at_class_time",
+        ];
+
+        for (let cost_criteria of cost_criterias) {
+          let row = document.createElement("tr");
+          let cell1 = document.createElement("td");
+          let cell2 = document.createElement("td");
+
+          cell1.textContent = cost_criteria;
+          row.appendChild(cell1);
+          cell2.textContent = conflict_data[cost_criteria];
+          row.appendChild(cell2);
+          table.appendChild(row);
+        }
+
+        return table.outerHTML;
+      }
+
+      fetch("assignment_output_files/cost_break_down.json")
+        .then((response) => response.json())
+        .then((jsonData) => {
+          let div = document.createElement("div");
+          div.classList.add("tableFixHead");
+          // Create a table element
+          let table = document.createElement("table");
+
+          no_of_ta = jsonData.total_ta;
+          no_of_sections = jsonData.total_sections;
+
+          //   console.log(jsonData);
+
+          // Create a header row
+          let headerRow = table.insertRow();
+          let table_headers = ["TA ID", "NAME"];
+          let sections = [];
+
+          for (let i = 1; i <= no_of_sections; i++) {
+            // table_headers.push(`${jsonData[1][i]["course_no"]} | ${jsonData[1][i]["course_long_name"]}`);
+            table_headers.push(`${jsonData[1][i]["course_no"]}<hr>${jsonData[1][i]["course_long_name"]}`);
+          }
+
+          for (let header of table_headers) {
+            let th = document.createElement("th");
+            th.innerHTML = header;
+            th.classList.add("main_table_th");
+            headerRow.appendChild(th);
+          }
+
+          // Create rows with data
+          for (let i = 1; i <= no_of_ta; i++) {
+            let row = table.insertRow();
+            let cell1 = row.insertCell();
+            cell1.textContent = jsonData[i].ta_id;
+            cell1.classList.add("main_table_td");
+
+            let cell2 = row.insertCell();
+            cell2.textContent = jsonData[i].fname + " " + jsonData[i].lname;
+            cell2.classList.add("main_table_td");
+
+            for (let j = 1; j <= no_of_sections; j++) {
+              let cell = row.insertCell();
+              cell.textContent = jsonData[i][j].total_cost;
+              cell.classList.add("main_table_td");
+              cell.addEventListener("click", () => {
+                cell.innerHTML = createInnerTable(jsonData[i][j]);
+                cell.style.padding = "50px";
+              });
+
+              cell.addEventListener("mouseout", () => {
+                cell.innerHTML = "";
+                cell.textContent = jsonData[i][j].total_cost;
+                cell.style.padding = "10px";
+              });
+            }
+          }
+
+          // Append the table to the body
+          div.appendChild(table);
+          document.body.appendChild(div);
+        })
+        .catch((error) => console.error("Error loading JSON:", error));
+    </script>
+  </body>
+</html>
