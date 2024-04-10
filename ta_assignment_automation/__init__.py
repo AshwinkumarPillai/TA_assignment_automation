@@ -6,6 +6,7 @@ from .src.utils.filterDigits import filter_digits
 from .src.utils.load_conflict_matrix import getConflictMatFromTxt
 from .src.utils.saveMatirxToTxtFile import saveMatToTxt
 from .src.utils.setCurrDirToBase import setCurrDirToBase
+from .src.utils.create_required_folders import create_required_folders
 
 # CONFIG IMPORTS
 from .src.config.capacity_cap import getCapacityCap

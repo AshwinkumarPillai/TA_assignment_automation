@@ -5,13 +5,8 @@ __version__ = "1.0"
 __license__ = "MIT style license file"
 """
 
-import os
-import sys
 import pandas as pd
 import json
-
-
-
 
 def convertInputFilesToJSON(inp_folder:str = "input_files/", json_folder:str = "input_json/") -> None:
 
