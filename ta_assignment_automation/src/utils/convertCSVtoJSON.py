@@ -30,7 +30,7 @@ def convertInputFilesToJSON(inp_folder:str = "input_files/", json_folder:str = "
     
     """
 
-    input_file_names = ["TA_schedule.csv", "class_schedule.csv", "Instr_Pref_old.csv"]
+    input_file_names = ["TA_schedule.csv", "class_schedule.csv", "Instr_Pref.csv"]
 
     json_files = [pd.read_csv(inp_folder + filename).to_json() for filename in input_file_names]
 
