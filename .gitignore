@@ -2,3 +2,7 @@ __pycache__/
 ta_assignment.db
 .ipynb_checkpoints/
 .vscode/
+
+ta_assignment_automation.egg-info/
+build/
+dist/
