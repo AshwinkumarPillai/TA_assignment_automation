@@ -23,6 +23,7 @@ def getEdgeWeights() -> dict:
     return {
         "time_conflict": 1000,          # if TA schedule conflicts with the current section - LAB
         "current_course": 900,          # If they are currently enrolled in this section (make sure to do that for course)
+        "ta_13_hr_large_class": 50,     # TA has 13.33 hours and the class has a large enrollment -> prefer TAs with 17.78 hours
         "not_ta_for_class_before": 5,   # did not TA for this class before
         "not_ins_pref": 4,              # is not in the preference list given by the instructor
         "not_taken_before": 3,          # did not take this course before

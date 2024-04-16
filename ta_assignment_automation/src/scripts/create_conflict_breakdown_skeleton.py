@@ -32,7 +32,7 @@ def createConflictBreakdownSkeleton()-> dict:
                 "course_long_name": "Computing Ethics and Society",
                 "total_cost": 4,
                 "time_conflict_with_lab": 0,
-                "ta_hours_less_class_has_more_capacity": 0,             // CRITERIA FOR CONFLICT
+                "ta_13_hr_large_class": 0,             // CRITERIA FOR CONFLICT
                 "ta_currently_taking_this_class": 0,
                 "not_instructor_preference": 4,
                 "not_instructor_first_preference": 0,
@@ -57,7 +57,7 @@ def createConflictBreakdownSkeleton()-> dict:
     cost_breakdown = {
         "total_cost": 0,
         "time_conflict_with_lab": 0,
-        "ta_hours_less_class_has_more_capacity": 0,
+        "ta_13_hr_large_class": 0,
         "ta_currently_taking_this_class":0,
         "not_instructor_preference": 0,
         "not_instructor_first_preference": 0,

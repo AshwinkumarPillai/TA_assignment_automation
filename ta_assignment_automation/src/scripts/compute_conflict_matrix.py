@@ -86,9 +86,9 @@ def computeConflictMatrix(output_file_path:str ="output_files/conflict_matrix.js
                 # only 18 hr TA should be assigned to one-one labs with lots of students
                 if section["enrolled"] > getCapacityCap()[2] and ta["hours"] == "13.33": 
                 # if section["course_no"] == "CSCI1302" and ta["hours"] == "13.33":
-                    cost = 50
+                    cost = edgeWeights["ta_13_hr_large_class"]
                     value += cost
-                    conflict_breakdown[ta_id][section_id]["ta_hours_less_class_has_more_capacity"] += cost
+                    conflict_breakdown[ta_id][section_id]["ta_13_hr_large_class"] += cost
                     
 
             # 2. TA is currently taking this course - number of CRN = number of conflicts x weight for class conflict

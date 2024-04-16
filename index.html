@@ -16,6 +16,7 @@
         border-collapse: collapse;
         width: 100%;
         margin-top: 20px;
+        box-sizing: border-box;
       }
 
       th,
@@ -23,52 +24,168 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
+        padding: 10px;
+        font-size: 14px;
       }
 
       th {
         background-color: #f2f2f2;
       }
 
-      tr:hover {
-        background-color: #f5f5f5;
+      td:hover {
+        cursor: pointer;
+        background-color: #34495e;
+        color: white;
+      }
+
+      button {
+        font-size: 18px;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      /* ------------------------ */
+      .cost_cell {
+        cursor: pointer;
+        background-color: #34495e;
+        color: white;
       }
     </style>
   </head>
 
   <body>
-    <button><a href="./conflicts_view.html">View Conflicts</a></button>
+    <button>
+      <a href="./conflicts_view.html">View Conflicts</a>
+    </button>
+
+    <button type="button" onclick="downloadCsvFile()">Download CSV</button>
     <script>
-      fetch("assignment_output_files/ta_assignments.json")
-        .then((response) => response.json())
-        .then((jsonData) => {
-          // Create a table element
-          var table = document.createElement("table");
+      let conflict_data;
 
-          // Create a header row
-          var headerRow = table.insertRow();
-          for (var key in jsonData[0]) {
-            if (jsonData[0].hasOwnProperty(key)) {
-              var th = document.createElement("th");
-              th.textContent = key;
+      let csv_data = [];
+
+      function display_costbreakDown(ta_id, section_id) {
+        cost_criterias = [
+          "time_conflict_with_lab",
+          "ta_13_hr_large_class",
+          "ta_currently_taking_this_class",
+          "not_instructor_preference",
+          "not_instructor_first_preference",
+          "did_not_TA_this_class_before",
+          "did_not_take_this_class_before",
+          "not_avaliable_at_class_time",
+        ];
+
+        let text = `\nCOST BREAKDOWN FOR TA - ${conflict_data[ta_id]["fname"]} with COURSE - ${conflict_data[ta_id][section_id]["course_no"]} :\n`;
+        text += "----------------------------------\n\n";
+        for (let cost_criteria of cost_criterias) {
+          if (conflict_data[ta_id][section_id][cost_criteria]) {
+            text += cost_criteria + ": " + conflict_data[ta_id][section_id][cost_criteria] + "\n";
+          }
+        }
+
+        if (conflict_data[ta_id][section_id]["total_cost"] === 0) {
+          return "NO CONFLICTS";
+        }
+
+        return text;
+      }
+
+      function renderAssignments() {
+        fetch("assignment_output_files/cost_break_down.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            conflict_data = jsonData;
+          })
+          .catch((error) => console.error("Error loading JSON:", error));
+
+        fetch("assignment_output_files/ta_assignments.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            // Create a table element
+            let table = document.createElement("table");
+            let headerRow = table.insertRow();
+
+            let headers = [
+              "email",
+              "fname",
+              "lname",
+              "course_no",
+              "course_name",
+              "lab",
+              "crn",
+              "ins_fname",
+              "ins_lname",
+              "cost",
+              "enrolled",
+              "capacity",
+              "ta_hours",
+            ];
+
+            let csv_header_row = [];
+            for (let header of headers) {
+              let th = document.createElement("th");
+              th.textContent = header;
               headerRow.appendChild(th);
+              csv_header_row.push(th.innerHTML);
             }
-          }
+            csv_data.push(csv_header_row.join(","));
 
-          // Create rows with data
-          for (var i = 0; i < jsonData.length; i++) {
-            var row = table.insertRow();
-            for (var key in jsonData[i]) {
-              if (jsonData[i].hasOwnProperty(key)) {
-                var cell = row.insertCell();
-                cell.textContent = jsonData[i][key];
+            // Create rows with data
+            for (let i = 0; i < jsonData.length; i++) {
+              let csv_row = [];
+              let row = table.insertRow();
+              for (let header of headers) {
+                let cell = row.insertCell();
+                cell.textContent = jsonData[i][header];
+                if (header === "crn") {
+                  csv_row.push(cell.innerHTML.split(",").join("; "));
+                } else {
+                  csv_row.push(cell.innerHTML);
+                }
+                if (header === "cost") {
+                  // cell.classList.add("cost_cell");
+                  cell.addEventListener("click", () => {
+                    alert(display_costbreakDown(jsonData[i]["ta_id"], jsonData[i]["section_id"]));
+                  });
+                }
               }
+              csv_data.push(csv_row.join(","));
             }
-          }
 
-          // Append the table to the body
-          document.body.appendChild(table);
-        })
-        .catch((error) => console.error("Error loading JSON:", error));
+            csv_data = csv_data.join("\n");
+
+            // Append the table to the body
+            document.body.appendChild(table);
+          })
+          .catch((error) => console.error("Error loading JSON:", error));
+      }
+
+      function downloadCsvFile() {
+        let csv_file = new Blob([csv_data], { type: "text/csv" });
+
+        let temp_link = document.createElement("a");
+
+        // Download csv file
+        temp_link.download = "TA_assignments.csv";
+        let url = window.URL.createObjectURL(csv_file);
+        temp_link.href = url;
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+        // Automatically click the link to trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+      }
+
+      async function main() {
+        let resp = await fetch("assignment_output_files/cost_break_down.json");
+        conflict_data = await resp.json();
+        renderAssignments();
+      }
+
+      main();
     </script>
   </body>
 </html>
