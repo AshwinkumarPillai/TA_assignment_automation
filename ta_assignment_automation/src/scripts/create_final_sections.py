@@ -154,11 +154,12 @@ def processFinalSections(sections: list, labs: list, lab_cno: set, FourZeroSecti
     courses_to_exclude = ["CSCI1301", "CSCI2150", "CSCI4830", "CSCI4900"]
     # PROVIDE INDEX AND REMOVE SECTIONS WITH ENROLLMENT LESS THAN 20 (Less than 1/2 TA requirement)
     for section in semi_final_sections:
-
         if section["course_no"] in courses_to_exclude:
             continue
         if section["enrolled"] > getCapacityCap()[0.5]:
             section["section_id"] = index
+            if "instructors" not in  section:
+                section["instructors"] = [section["ins_fname"] + " " + section["ins_lname"]]
             index += 1
             final_sections.append(section)
         # If they have more than 80 students (capacity cap - 2 -> two TAs required to handle this class)
@@ -166,6 +167,8 @@ def processFinalSections(sections: list, labs: list, lab_cno: set, FourZeroSecti
         if section["enrolled"] > getCapacityCap()[2] and not section["course_no"] in lab_cno:
             new_section = copy.deepcopy(section)
             new_section["section_id"] = index
+            if "instructors" not in  section:
+                new_section["instructors"] = [section["ins_fname"] + " " + section["ins_lname"]]
             index += 1
             final_sections.append(new_section)
 

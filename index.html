@@ -115,8 +115,9 @@
               "course_name",
               "lab",
               "crn",
-              "ins_fname",
-              "ins_lname",
+              // "ins_fname",
+              // "ins_lname",
+              "instructors",
               "cost",
               "enrolled",
               "capacity",
@@ -139,11 +140,13 @@
               for (let header of headers) {
                 let cell = row.insertCell();
                 cell.textContent = jsonData[i][header];
-                if (header === "crn") {
-                  csv_row.push(cell.innerHTML.split(",").join("; "));
-                } else {
-                  csv_row.push(cell.innerHTML);
+                // separate the CRN and instructors with ; instead ,
+                if (header === "crn" || header === "instructors") {
+                  cell.innerHTML = cell.innerHTML.split(",").join("; ");
                 }
+
+                csv_row.push(cell.innerHTML);
+
                 if (header === "cost") {
                   // cell.classList.add("cost_cell");
                   cell.addEventListener("click", () => {

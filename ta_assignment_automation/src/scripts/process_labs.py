@@ -86,6 +86,7 @@ def mergedCrnsBasedOnRequirement(lab_data: dict) -> list:
         while i < n:
             j = cut_size
             merged_crns = {}
+
             while i < n and j > 0:
 
                 if len(merged_crns.keys()) == 0:
@@ -150,8 +151,6 @@ def merge1302Sections(lab_data: dict) -> dict:
 
     new_section1302 = [newDict]
     new_section1302.extend(section1302[2:])
-
-    lab_data["CSCI1302"] = new_section1302
 
     return lab_data
 
