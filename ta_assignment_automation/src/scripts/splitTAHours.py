@@ -76,8 +76,9 @@ def splitTAhours(input_file_path:str ="assignment_output_files/ta_assignments.js
     for _, ta_class in dualTAs.items():
         ta_hours = ta_class[0]["ta_hours"]
         total_enrollment = ta_class[0]["enrolled"] + ta_class[1]["enrolled"]
-        ta_class[0]["ta_hours"] = round(float(ta_class[0]["enrolled"] / total_enrollment) * ta_hours, 2)
-        ta_class[1]["ta_hours"] = round(float(ta_class[1]["enrolled"] / total_enrollment) * ta_hours, 2)
+        ta_class[0]["ta_hours"] = round((float(ta_class[0]["enrolled"] / total_enrollment) * (ta_hours - 4.0)) + 4.0, 2)
+        ta_class[1]["ta_hours"] = round((float(ta_class[1]["enrolled"] / total_enrollment) * (ta_hours - 4.0)) + 4.0, 2)
+
         updated_assignements[ta_class[0]["assignmentId"]] = ta_class[0]
         updated_assignements[ta_class[1]["assignmentId"]] = ta_class[1]
 
