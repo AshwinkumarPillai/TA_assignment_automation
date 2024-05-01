@@ -60,46 +60,46 @@ sudo pip install -U mistune
     ├── algorithms
     │ ├── hungarian.py
     ├── assignment_output_files
-    ├── data
-    │ ├── capacity_cap.py
-    │ ├── daysMapping.py
-    │ ├── db_config.py
-    │ ├── edgeWeights.py
-    │ ├── getPseudoLabs.py
-    │ ├── lab_ta_requirements.py
-    │ └── timeSlotMapping.py
-    ├── db
-    │ ├── connect.py
-    │ ├── create_tables.py
-    │ ├── insert_data.py
-    │ └── models.py
     ├── input_files
     ├── input_json
     ├── output_files
     │ └── section_data
-    ├── scripts
-    │ ├── combined_view.py
-    │ ├── compute_conflict_matrix.py
-    │ ├── create_conflict_breakdown_skeleton.py
-    │ ├── create_final_sections.py
-    │ ├── duplicateTAs.py
-    │ ├── incremental_TA_duplication.py
-    │ ├── parse_courses.py
-    │ ├── parse_instructor_pref.py
-    │ ├── parse_schedule.py
-    │ ├── parse_sections.py
-    │ ├── parse_ta_data.py
-    │ └── process_labs.py
-    ├── temp # ignore
-    ├── utils
-    │ ├── convertCSVtoJSON.py
-    │ ├── csvToDict.py
-    │ ├── create_conflict_breakdown_skeleton.py
-    │ ├── dictionaryToJsonFile.py
-    │ ├── getCoursesTakenFromCrn.py
-    │ ├── getTimeSlotsFromCRN.py
-    │ ├── load_conflict_matrix.py
-    │ └── show_hungarian_assignments.py
+    ├── ta_assignment_automation
+    │   ├── data
+    │   │ ├── capacity_cap.py
+    │   │ ├── daysMapping.py
+    │   │ ├── db_config.py
+    │   │ ├── edgeWeights.py
+    │   │ ├── getPseudoLabs.py
+    │   │ ├── lab_ta_requirements.py
+    │   │ └── timeSlotMapping.py
+    │   ├── db
+    │   │ ├── connect.py
+    │   │ ├── create_tables.py
+    │   │ ├── insert_data.py
+    │   │ └── models.py
+    │   ├── scripts
+    │   │ ├── combined_view.py
+    │   │ ├── compute_conflict_matrix.py
+    │   │ ├── create_conflict_breakdown_skeleton.py
+    │   │ ├── create_final_sections.py
+    │   │ ├── duplicateTAs.py
+    │   │ ├── incremental_TA_duplication.py
+    │   │ ├── parse_courses.py
+    │   │ ├── parse_instructor_pref.py
+    │   │ ├── parse_schedule.py
+    │   │ ├── parse_sections.py
+    │   │ ├── parse_ta_data.py
+    │   │ └── process_labs.py
+    │   ├── utils
+    │   │ ├── convertCSVtoJSON.py
+    │   │ ├── csvToDict.py
+    │   │ ├── create_conflict_breakdown_skeleton.py
+    │   │ ├── dictionaryToJsonFile.py
+    │   │ ├── getCoursesTakenFromCrn.py
+    │   │ ├── getTimeSlotsFromCRN.py
+    │   │ ├── load_conflict_matrix.py
+    │   │ └── show_hungarian_assignments.py
     ├── conflicts_view.html # Shows the conflict breakdown in browser (TA vs Sections)
     ├── index.html
     ├── main.ipynb # This file should be used to run all the scripts in one go

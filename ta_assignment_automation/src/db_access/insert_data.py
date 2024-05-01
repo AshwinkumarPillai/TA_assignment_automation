@@ -5,7 +5,6 @@ from models import Base, TA, Course, Instructor, Section, Schedule, Assignment
 import json
 
 
-
 with open("output_files/ta_schedule.json", 'r') as file:
     ta_sched = json.load(file)
 

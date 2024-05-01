@@ -140,7 +140,7 @@
               for (let header of headers) {
                 let cell = row.insertCell();
                 cell.textContent = jsonData[i][header];
-                // separate the CRN and instructors with ; instead ,
+                // separate the CRN and instructors with ; instead of ,
                 if (header === "crn" || header === "instructors") {
                   cell.innerHTML = cell.innerHTML.split(",").join("; ");
                 }
