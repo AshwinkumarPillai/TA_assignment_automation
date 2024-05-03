@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check conflicts</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      .container {
+        margin: 20px;
+      }
+      .input-group {
+        margin-bottom: 10px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      tr {
+        padding: 0;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        transition: 0.2s;
+        z-index: -10;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+      td:hover {
+        cursor: pointer;
+        background-color: #34495e;
+        color: white;
+      }
+
+      /* ------------------------ */
+      .main_table_td:first-child,
+      .main_table_th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 100;
+        background-color: #ddd;
+      }
+      .main_table_td:nth-child(2),
+      .main_table_th:nth-child(2) {
+        position: sticky;
+        left: 40px;
+        z-index: 100 !important;
+        background-color: #ddd;
+      }
+      .tableFixHead th {
+        position: sticky;
+        top: 0;
+        background: #eee;
+        z-index: 2;
+      }
+      /* ------------------------ */
+    </style>
+  </head>
+  <body>
+    <button><a href="./index.html">View Assignments</a></button>
+    <hr />
+    <div class="container">
+      <!-- <div class="input-group">
+        <label for="name">TA Name:</label>
+        <input type="text" id="ta_name" placeholder="Enter TA name" />
+      </div>
+      <div class="input-group">
+        <label for="course">Course Name:</label>
+        <input type="text" id="course" placeholder="Enter course name" />
+      </div> -->
+      <label for="taSelect">Select TA:</label>
+      <select id="taSelect">
+        <!-- Dropdown options will be populated dynamically -->
+      </select>
+      <!-- <br /> -->
+      <label for="sectionSelect">Select Class:</label>
+      <select id="sectionSelect">
+        <!-- Dropdown options will be populated dynamically -->
+      </select>
+      <button onclick="checkConflicts()">Check Conflicts</button>
+    </div>
+    <hr />
+    <br />
+
+    <script>
+      try {
+        let ta_data = new Map();
+        let section_data = new Map();
+        let conflict_data = [];
+        let csv_data = [];
+
+        async function loadTAData() {
+          const response = await fetch("output_files/ta_schedule.json");
+          const taData = await response.json();
+
+          let temp_name_list = [];
+
+          for (let ta of taData) {
+            ta_data.set(ta["fname"] + ta["lname"], ta);
+            temp_name_list.push(ta["fname"] + ta["lname"]);
+          }
+
+          temp_name_list.sort();
+
+          const taSelect = document.getElementById("taSelect");
+
+          const option = document.createElement("option");
+          option.value = null;
+          option.textContent = "None";
+          taSelect.appendChild(option);
+
+          for (let ta_name of temp_name_list) {
+            const option = document.createElement("option");
+            option.value = ta_name;
+            let ta = ta_data.get(ta_name);
+            option.textContent = ta["fname"] + " " + ta["lname"];
+            taSelect.appendChild(option);
+          }
+        }
+
+        async function loadSectionData() {
+          const response = await fetch("output_files/section_data/section.json");
+          const sectionData = await response.json();
+          // this is very bad way to do it but for now I'm doing it this way to save time - make it effecient later
+          let temp_map = new Map();
+          let temp_name_list = [];
+
+          for (let section of sectionData) {
+            section_data.set(section["section_id"], section);
+            let name_key = section["course_no"] + " - " + section["crn"].join(", ");
+            temp_name_list.push(name_key);
+            temp_map.set(name_key, section["section_id"]);
+          }
+
+          temp_name_list.sort();
+
+          const sectionSelect = document.getElementById("sectionSelect");
+
+          for (let section_name_key of temp_name_list) {
+            const option = document.createElement("option");
+            option.value = temp_map.get(section_name_key);
+            option.textContent = section_name_key;
+            sectionSelect.appendChild(option);
+          }
+        }
+
+        async function loadConflictData() {
+          const response = await fetch("assignment_output_files/cost_break_down.json");
+          conflict_data = await response.json();
+        }
+
+        function checkConflicts() {
+          // remove download button
+          let dbtn = document.getElementById("conf_download_btn");
+          if (dbtn) {
+            document.body.removeChild(dbtn);
+          }
+
+          // add download button for CSV download data
+          let downloadBtn = document.createElement("button");
+          downloadBtn.id = "conf_download_btn";
+          downloadBtn.textContent = "Download data as CSV file";
+          downloadBtn.addEventListener("click", downloadCsvFile);
+          document.body.appendChild(downloadBtn);
+
+          csv_data = [];
+          const taSelect = document.getElementById("taSelect");
+          const selectedTA = taSelect.value;
+          let ta = null;
+          if (selectedTA) {
+            ta = ta_data.get(selectedTA);
+          }
+
+          const sectionSelect = document.getElementById("sectionSelect");
+          const selectedSection = sectionSelect.value;
+          const section = section_data.get(parseInt(selectedSection));
+
+          // alert(conflict_data[ta["ta_id"]][section["section_id"]]["total_cost"]);
+
+          //  ------ TABLE -------
+
+          let tableEle = document.getElementById("view_table");
+          if (tableEle) {
+            document.body.removeChild(tableEle);
+          }
+
+          let table = document.createElement("table");
+          table.id = "view_table";
+          let headerRow = table.insertRow();
+
+          let headers = [
+            "email", // 0
+            "fname",
+            "lname",
+            "cost", // 4
+            "course_no",
+            "course_name", // 5
+            "lab",
+            "crn",
+            // "ins_fname",
+            // "ins_lname",
+            "instructors",
+            "enrolled",
+            "capacity",
+          ];
+
+          let csv_header_row = [];
+
+          for (let header of headers) {
+            let th = document.createElement("th");
+            th.textContent = header;
+            headerRow.appendChild(th);
+            csv_header_row.push(th.innerHTML);
+          }
+          csv_data.push(csv_header_row.join(","));
+
+          let tableTas = [];
+          if (ta) {
+            tableTas.push(ta);
+          } else {
+            for (let [key, value] of ta_data.entries()) {
+              tableTas.push(value);
+            }
+            tableTas.sort((a, b) => {
+              // Convert names to lowercase for case-insensitive sorting
+              let nameA = a["fname"].toLowerCase() + a["lname"].toLowerCase();
+              let nameB = b["fname"].toLowerCase() + b["lname"].toLowerCase();
+
+              if (nameA < nameB) {
+                return -1; // a should come before b
+              }
+              if (nameA > nameB) {
+                return 1; // b should come before a
+              }
+              return 0; // names are equal
+            });
+          }
+
+          for (let ta of tableTas) {
+            let csv_row = [];
+            let row = table.insertRow();
+            for (let i = 0; i < 3; i++) {
+              let cell = row.insertCell();
+              cell.textContent = ta[headers[i]];
+              csv_row.push(cell.innerHTML);
+            }
+            // cost cell
+            let cell = row.insertCell();
+            cell.textContent = conflict_data[ta["ta_id"]][section["section_id"]]["total_cost"];
+            csv_row.push(cell.innerHTML);
+
+            // Remaining headers
+            for (let i = 4; i < headers.length; i++) {
+              let cell = row.insertCell();
+              cell.textContent = section[headers[i]];
+              if (headers[i] === "course_name") cell.textContent = section["course_long_name"];
+              if (headers[i] === "crn" || headers[i] === "instructors") {
+                cell.innerHTML = cell.innerHTML.split(",").join("; ");
+              }
+              csv_row.push(cell.innerHTML);
+            }
+
+            csv_data.push(csv_row.join(","));
+          }
+
+          csv_data = csv_data.join("\n");
+          document.body.appendChild(table);
+        }
+
+        function downloadCsvFile() {
+          let csv_file = new Blob([csv_data], { type: "text/csv" });
+
+          let temp_link = document.createElement("a");
+
+          // Download csv file
+          temp_link.download = `class_conflict_data.csv`;
+          let url = window.URL.createObjectURL(csv_file);
+          temp_link.href = url;
+          // This link should not be displayed
+          temp_link.style.display = "none";
+          document.body.appendChild(temp_link);
+          // Automatically click the link to trigger download
+          temp_link.click();
+          document.body.removeChild(temp_link);
+        }
+
+        loadTAData();
+        loadSectionData();
+        loadConflictData();
+      } catch (error) {
+        console.log(error);
+      }
+    </script>
+  </body>
+</html>
