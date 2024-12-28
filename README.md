@@ -1,5 +1,7 @@
 # TA ASSIGNMENT - AUTOMATION PROJECT
 
+The PyPI package for the project can be found here: https://pypi.org/project/ta-assignment-automation/
+
 ## How to run the project
 
 INPUT FILES:
